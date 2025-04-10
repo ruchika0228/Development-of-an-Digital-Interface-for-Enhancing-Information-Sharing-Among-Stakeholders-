@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    .sidebar {
+      background-color: #2c3e50;
+      color: white;
+      width: 250px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      padding: 10px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+      background-color: #34495e;
+    }
+
+    .live-clock {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #ecf0f1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header .user-info {
+      font-size: 16px;
+    }
+
+    .content-section {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .content-section h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .content-section textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #2980b9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #3498db;
+      color: white;
+    }
+
+    table td {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Your Dashboard</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('settings') }}">Settings</a></li>
+      <li><a href="{{ url_for('timetable') }}">Timetable</a></li>
+      <li><a href="{{ url_for('notifications') }}">Notifications</a></li>
+      <li><a href="{{ url_for('reports') }}">Reports</a></li>
+      <li><a href="{{ url_for('project') }}">Project</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+    <div class="live-clock" id="liveClock"></div>
+  </nav>
+
+  <div class="main-content">
+    <header class="header">
+      <h1>Welcome to Your Dashboard</h1>
+      <div class="user-info">
+        <p>Logged in as <strong>{{ session['user']['name'] }}</strong></p>
+      </div>
+    </header>
+
+    <div class="content-section" id="timetable-section">
+      <h2>Today's Timetable</h2>
+      <table id="timetable">
+        <!-- Timetable will be dynamically inserted here -->
+      </table>
+    </div>
+
+    <div class="content-section">
+      <h2>Achievement Sharing</h2>
+      <textarea id="achievement" placeholder="Share your achievements here..."></textarea>
+      <button class="btn" onclick="saveAchievement()">Share</button>
+    </div>
+
+    <div class="content-section">
+      <h2>Project Idea Sharing</h2>
+      <textarea id="project-idea" placeholder="Share your project ideas here..."></textarea>
+      <button class="btn" onclick="saveProjectIdea()">Share</button>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      var now = new Date();
+      var hours = now.getHours().toString().padStart(2, '0');
+      var minutes = now.getMinutes().toString().padStart(2, '0');
+      var seconds = now.getSeconds().toString().padStart(2, '0');
+      document.getElementById('liveClock').textContent = hours + ':' + minutes + ':' + seconds;
+    }
+    setInterval(updateClock, 1000);
+
+    const timetableData = {
+      Monday: ["AI Basics", "Data Structures", "Machine Learning", "Artificial Neural Networks", "Lunch", "Database Systems", "Computer Networks", "Math for ML"],
+      Tuesday: ["Data Structures", "Machine Learning", "AI Basics", "Artificial Neural Networks", "Lunch", "Data Science Tools", "Computer Networks", "AI Basics"],
+      Wednesday: ["Machine Learning", "AI Basics", "Data Structures", "ML Algorithms", "Lunch", "Artificial Neural Networks", "Reinforcement Learning", "Computer Networks"],
+      Thursday: ["ML Algorithms", "Machine Learning", "AI Basics", "Reinforcement Learning", "Lunch", "Data Science Tools", "Math for ML", "AI Basics"],
+      Friday: ["Database Systems", "AI Basics", "Data Science Tools", "Reinforcement Learning", "Lunch", "Computer Networks", "Machine Learning", "Math for ML"],
+      Saturday: ["Probability & Stats", "Math for ML", "Deep Learning", "Computer Networks"]
+    };
+
+    function displayTimetable() {
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const today = days[new Date().getDay()];
+      const timetable = timetableData[today] || [];
+
+      const timetableTable = document.getElementById('timetable');
+      timetableTable.innerHTML = `
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>${today}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${timetable.map((subject, index) => `
+            <tr>
+              <td>${9 + index}:00  - ${10 + index}:00</td>
+              <td>${subject}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+    }
+
+    displayTimetable();
+
+    function saveAchievement() {
+      const achievement = document.getElementById("achievement").value;
+
+      if (achievement.trim() === "") {
+        alert("Achievement content cannot be empty!");
+        return;
+      }
+
+      fetch("/add_achievement", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: achievement }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Achievement shared successfully!");
+            document.getElementById("achievement").value = "";
+          } else {
+            alert("Failed to share achievement. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again later.");
+        });
+    }
+
+    function saveProjectIdea() {
+      const projectIdea = document.getElementById("project-idea").value;
+
+      if (projectIdea.trim() === "") {
+        alert("Project idea content cannot be empty!");
+        return;
+      }
+
+      fetch("/add_project_idea", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: projectIdea }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Project idea shared successfully!");
+            document.getElementById("project-idea").value = "";
+          } else {
+            alert("Failed to share project idea. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again later.");
+        });
+    }
+  </script>
+</body>
+</html>

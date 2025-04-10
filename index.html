@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Patrick Hand', cursive;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('statics/images/teacher_login_bg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f0f0f0;
+        }
+
+        .container {
+            background-color: rgba(38, 70, 83, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #f0f0f0;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+            text-align: left;
+            color: #d1d1d1;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border 0.3s;
+            background-color: #e0e0e0;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #5a9;
+            outline: none;
+        }
+
+        button {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #ddd;
+            transform: scale(1.05);
+        }
+
+        p {
+            font-size: 1em;
+            margin-top: 20px;
+            color: #d1d1d1;
+        }
+
+        a {
+            color: #f0f0f0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+
+        .messages ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .messages li {
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Teacher Login</h1>
+        <form method="POST" action="/login">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Login</button>
+        </form>
+        <p>
+            <a href="/forgotpass">Forgot Password?</a> |
+            <a href="/registration">Register as a New Teacher</a>
+        </p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</body>
+
+</html>

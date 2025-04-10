@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Timetable</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9fafc;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      margin-top: 10px;
+      color: #333;
+      font-size: 24px;
+      text-align: center;
+    }
+    .user-selection, .day-selection {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-selection label, .day-selection label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #555;
+    }
+    .user-selection select, .day-selection select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .timetable-section {
+      margin-top: 30px;
+    }
+    .day {
+      margin-bottom: 20px;
+    }
+    .day h3 {
+      color: #3498db;
+      font-size: 18px;
+    }
+    .form-group {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #555;
+      width: 30%;
+    }
+    .form-group input {
+      width: 65%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .form-group button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #2980b9;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ccc;
+      color: #333;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .btn-back:hover {
+      background-color: #aaa;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .form-group label {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      .form-group input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .form-group button {
+        width: 100%;
+      }
+      h1 {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 18px;
+      }
+      .btn-back {
+        width: 100%;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Manage Timetable</h1>
+    
+    <!-- User Selection -->
+    <div class="user-selection">
+      <label for="user">Select User:</label>
+      <select id="user" name="user" onchange="loadTimetable()">
+        <option value="">--Select User--</option>
+        <!-- Dynamically populate this with backend data -->
+        <option value="user1">User 1</option>
+        <option value="user2">User 2</option>
+        <option value="user3">User 3</option>
+        <!-- Add more users dynamically if required -->
+      </select>
+    </div>
+
+    <!-- Day Selection -->
+    <div class="day-selection">
+      <label for="day">Select Day:</label>
+      <select id="day" name="day" onchange="loadTimeSlots()">
+        <option value="">--Select Day--</option>
+        <option value="monday">Monday</option>
+        <option value="tuesday">Tuesday</option>
+        <option value="wednesday">Wednesday</option>
+        <option value="thursday">Thursday</option>
+        <option value="friday">Friday</option>
+        <option value="saturday">Saturday</option>
+      </select>
+    </div>
+
+    <form action="{{ url_for('update_timetable') }}" method="POST">
+      <!-- Timetable Section -->
+      <div class="timetable-section" id="timetable-section">
+        <!-- Timetable will be dynamically populated here based on day selection -->
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+        <button type="submit">Update Timetable</button>
+      </div>
+
+    </form>
+
+    <!-- Back to Profile Button -->
+    <a href="{{ url_for('admin_profile') }}" class="btn-back">Back to Profile</a>
+  </div>
+
+  <script>
+    // Function to load timetable for the selected user
+    function loadTimetable() {
+      var userId = document.getElementById('user').value;
+
+      // Fetch the timetable for the selected user via AJAX (or use a form to fetch data from backend)
+      if(userId) {
+        fetch('/get_user_timetable/' + userId)  // Assuming this endpoint returns user's timetable data
+          .then(response => response.json())
+          .then(data => {
+            // Populate timetable form fields with data (if needed)
+          })
+          .catch(error => {
+            console.error('Error fetching timetable:', error);
+          });
+      }
+    }
+
+    // Function to load the available time slots based on the selected day
+    function loadTimeSlots() {
+      var day = document.getElementById('day').value;
+      var timetableSection = document.getElementById('timetable-section');
+      timetableSection.innerHTML = ''; // Clear previous slots
+
+      // Define time slots based on the selected day
+      var timeSlots = [];
+      if (day === 'saturday') {
+        timeSlots = ['9:00 AM - 10:00 AM', '10:00 AM - 11:00 AM', '11:00 AM - 12:00 PM', '12:00 PM - 1:00 PM'];
+      } else if (['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(day)) {
+        timeSlots = [
+          '9:00 AM - 10:00 AM', '10:00 AM - 11:00 AM', '11:00 AM - 12:00 PM', '12:00 PM - 1:00 PM',
+          '1:00 PM - 2:00 PM', '2:00 PM - 3:00 PM', '3:00 PM - 4:00 PM', '4:00 PM - 5:00 PM'
+        ];
+      }
+
+      // Dynamically generate the form inputs for each time slot
+      timeSlots.forEach(function(slot, index) {
+        var slotId = day + '_' + (index + 1);
+        var formGroup = document.createElement('div');
+        formGroup.classList.add('form-group');
+
+        var label = document.createElement('label');
+        label.setAttribute('for', slotId);
+        label.textContent = slot;
+
+        var input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.setAttribute('id', slotId);
+        input.setAttribute('name', slotId);
+        input.setAttribute('placeholder', 'Enter Class');
+
+        formGroup.appendChild(label);
+        formGroup.appendChild(input);
+        timetableSection.appendChild(formGroup);
+      });
+    }
+  </script>
+
+</body>
+</html>

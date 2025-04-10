@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9fafc;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      margin-top: 10px;
+      color: #333;
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .form-group label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .form-group button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #2980b9;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ccc;
+      color: #333;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .btn-back:hover {
+      background-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Admin Settings</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    
+    <!-- Profile Information Update Form -->
+    <form action="{{ url_for('update_profile') }}" method="POST">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="{{ admin['name'] }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="{{ admin['email'] }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" name="phone" value="{{ admin['phone'] }}" required>
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Update Profile</button>
+      </div>
+    </form>
+
+    <!-- Password Change Form -->
+    <form action="{{ url_for('change_password') }}" method="POST">
+      <div class="form-group">
+        <label for="current_password">Current Password</label>
+        <input type="password" id="current_password" name="current_password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm_password">Confirm New Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Change Password</button>
+      </div>
+    </form>
+
+    <!-- Notification Preferences Form -->
+    <form action="{{ url_for('update_notifications') }}" method="POST">
+      <div class="form-group">
+        <label for="notifications">Email Notifications</label>
+        <select name="notifications" id="notifications" required>
+          <option value="enabled" {% if admin['notifications'] == 'enabled' %}selected{% endif %}>Enabled</option>
+          <option value="disabled" {% if admin['notifications'] == 'disabled' %}selected{% endif %}>Disabled</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Save Preferences</button>
+      </div>
+    </form>
+
+    <!-- Back to Profile Button -->
+    <a href="{{ url_for('admin_profile') }}" class="btn-back">Back to Profile</a>
+  </div>
+
+</body>
+</html>

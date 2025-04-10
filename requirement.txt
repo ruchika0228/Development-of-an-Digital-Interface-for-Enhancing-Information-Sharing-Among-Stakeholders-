@@ -1,0 +1,6 @@
+@app.route('/profile')
+def profile():
+    if 'user' in session:
+        return render_template('profile.html', user=session['user'])
+    flash('You need to log in first.', 'error')
+    return redirect(url_for('index'))

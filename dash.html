@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      background-color: #2c3e50;
+      color: white;
+      width: 250px;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      padding: 10px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+      background-color: #34495e;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #ecf0f1;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    /* Header Styles */
+    .header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header .user-info {
+      font-size: 16px;
+    }
+
+    .header .live-clock {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Dashboard Cards */
+    .cards {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      flex: 1 1 calc(30% - 40px);
+      max-width: 300px;
+      text-align: center;
+    }
+
+    .card h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 20px;
+    }
+
+    .card p {
+      font-size: 24px;
+      margin: 0;
+      color: #3498db;
+      font-weight: bold;
+    }
+
+    /* Content Section */
+    .content-section {
+      padding: 20px;
+      margin: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-section h2 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+
+    .content-section p {
+      color: #555;
+    }
+
+    /* Timetable Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #3498db;
+      color: white;
+    }
+
+    table td {
+      background-color: #f9f9f9;
+    }
+
+    /* Button Styles */
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+
+    .btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Your Dashboard</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('settings') }}">Settings</a></li>
+      <li><a href="{{ url_for('timetable') }}">Timetable</a></li>
+      <li><a href="{{ url_for('notifications') }}">Notifications</a></li>
+      <li><a href="{{ url_for('reports') }}">Reports</a></li>
+      <li><a href="{{ url_for('project') }}">Project</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header class="header">
+      <h1>Welcome to Your Dashboard</h1>
+      <div class="user-info">
+        <p>Logged in as <strong>Professor</strong></p>
+      </div>
+      <div class="live-clock" id="liveClock"></div>
+    </header>
+
+    <!-- Timetable Section -->
+    <div class="content-section" id="timetable-section">
+      <h2>Today's Timetable</h2>
+      <table id="timetable">
+        <!-- Timetable will be dynamically inserted here -->
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Real-time clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('liveClock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateClock, 1000);
+
+    // Timetable logic
+    const timetableData = { /* Add your timetable data here */ };
+
+    function displayTimetable() {
+      const today = new Date().toLocaleString('en-us', { weekday: 'long' });
+      const timetable = timetableData[today];
+      const timetableTable = document.getElementById('timetable');
+
+      timetableTable.innerHTML = timetable
+        ? `<tr><th>Time</th><th>Subject</th></tr>${timetable.map((item) => `<tr><td>${item.time}</td><td>${item.subject}</td></tr>`).join('')}`
+        : '<tr><td colspan="2">No timetable available for today.</td></tr>';
+    }
+
+    displayTimetable();
+  </script>
+</body>
+</html>

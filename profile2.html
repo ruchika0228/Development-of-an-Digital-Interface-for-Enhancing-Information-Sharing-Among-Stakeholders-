@@ -1,0 +1,73 @@
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from pymongo import MongoClient
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+# MongoDB Configuration
+client = MongoClient("mongodb://localhost:27017/")
+db = client["admin_dashboard"]
+admin_collection = db["admins"]
+
+# Sample admin for testing (use MongoDB for production)
+admin_collection.insert_one({
+    "username": "admin",
+    "password": "password",
+    "name": "Admin User",
+    "email": "admin@example.com"
+})
+
+@app.route('/')
+def login():
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login_post():
+    username = request.form['username']
+    password = request.form['password']
+    admin = admin_collection.find_one({"username": username, "password": password})
+
+    if admin:
+        session['admin_id'] = str(admin['_id'])
+        session['username'] = admin['username']
+        flash("Welcome, {}!".format(admin['name']), "success")
+        return redirect(url_for('dashboard'))
+    else:
+        flash("Invalid username or password", "danger")
+        return redirect(url_for('login'))
+
+@app.route('/dashboard')
+def dashboard():
+    if 'admin_id' not in session:
+        flash("You must log in to access the dashboard", "warning")
+        return redirect(url_for('login'))
+    return render_template('dashboard2.html', username=session['username'])
+
+@app.route('/profile')
+def profile():
+    if 'admin_id' not in session:
+        flash("You must log in to view your profile", "warning")
+        return redirect(url_for('login'))
+    admin = admin_collection.find_one({"_id": session['admin_id']})
+    return render_template('profile2.html', admin=admin)
+
+@app.route('/profile/update', methods=['POST'])
+def update_profile():
+    if 'admin_id' not in session:
+        flash("You must log in to update your profile", "warning")
+        return redirect(url_for('login'))
+    name = request.form['name']
+    email = request.form['email']
+
+    admin_collection.update_one({"_id": session['admin_id']}, {"$set": {"name": name, "email": email}})
+    flash("Profile updated successfully", "success")
+    return redirect(url_for('profile'))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out", "info")
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(debug=True)

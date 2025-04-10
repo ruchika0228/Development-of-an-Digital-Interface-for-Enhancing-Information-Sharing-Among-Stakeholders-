@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="path_to_your_css_file.css"> <!-- Add your CSS file path -->
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard2') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('notifications2') }}">Notifications</a></li>
+                <li><a href="{{ url_for('profile2') }}">Profile</a></li>
+                <li><a href="{{ url_for('settings2') }}">Settings</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- Dynamic Content -->
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

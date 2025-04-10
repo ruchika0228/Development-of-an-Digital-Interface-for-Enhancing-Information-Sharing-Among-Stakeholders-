@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-img-wrapper {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ddd;
+    }
+
+    .details {
+      margin-bottom: 20px;
+    }
+
+    .details p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .messages {
+      margin-bottom: 20px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .messages li {
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+
+    .messages .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .messages .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    form {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-back {
+      background-color: #6c757d;
+    }
+
+    .btn-back:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="messages">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div class="profile-img-wrapper">
+      <img src="{{ user['profile_img'] or url_for('static', filename='images/default.png') }}" 
+           alt="Profile Picture" class="profile-img">
+    </div>
+
+    <h1>Your Profile</h1>
+    <div class="details">
+      <p><strong>Name:</strong> {{ user['name'] }}</p>
+      <p><strong>Email:</strong> {{ user['email'] }}</p>
+      <p><strong>Phone:</strong> {{ user['phone'] }}</p>
+    </div>
+
+
+    <a class="btn btn-back" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    <a href="{{ url_for('logout') }}" class="btn">Log Out</a>
+  </div>
+</body>
+</html>

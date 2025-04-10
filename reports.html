@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      margin-top: 0;
+      color: #333;
+    }
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .search-bar input[type="text"] {
+      width: 70%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .search-bar button {
+      padding: 8px 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .search-bar button:hover {
+      background-color: #2980b9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table th, table td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    table th {
+      background-color: #3498db;
+      color: white;
+    }
+    .status-completed {
+      color: green;
+      font-weight: bold;
+    }
+    .status-pending {
+      color: red;
+      font-weight: bold;
+    }
+    .btn-download {
+      text-decoration: none;
+      color: white;
+      background-color: #2ecc71;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+    .btn-download:hover {
+      background-color: #27ae60;
+    }
+    /* Flash message styling */
+    .messages {
+      list-style-type: none;
+      padding: 0;
+      margin: 10px auto;
+      width: 80%;
+      max-width: 600px;
+    }
+    .messages li {
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="messages">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  
+  <div class="container">
+    <h1>Reports</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Search reports..." id="search-input">
+      <button onclick="searchReports()">Search</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Report Name</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="report-table">
+        <tr>
+          <td>Project Overview <a href="/download/project-overview" class="btn-download">Download</a></td>
+          <td>12/20/2024</td>
+          <td class="status-completed">Completed</td>
+        </tr>
+        <tr>
+          <td>Performance Analysis <a href="/download/performance-analysis" class="btn-download">Download</a></td>
+          <td>12/15/2024</td>
+          <td class="status-pending">Pending</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    function searchReports() {
+      const input = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.querySelectorAll('#report-table tr');
+      
+      rows.forEach(row => {
+        const cells = row.getElementsByTagName('td');
+        const reportName = cells[0]?.textContent.toLowerCase();
+        if (reportName && reportName.includes(input)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+  <a class="btn" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

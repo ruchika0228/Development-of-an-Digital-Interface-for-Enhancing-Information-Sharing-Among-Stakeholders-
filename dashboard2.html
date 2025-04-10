@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f4f4f4;
+      flex-direction: row;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      background-color: #2c3e50;
+      color: white;
+      width: 250px;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      display: block;
+      padding: 10px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar ul li a:hover {
+      background-color: #34495e;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #ecf0f1;
+      overflow-y: auto;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+
+    /* Header Styles */
+    .header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header .user-info {
+      font-size: 16px;
+    }
+
+    /* Content Section */
+    .content-section {
+      padding: 20px;
+      margin: 20px 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-section h2 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+
+    .content-section p {
+      color: #555;
+    }
+
+    /* Notification Styles */
+    .notification {
+      background-color: #f39c12;
+      color: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+
+    .btn:hover {
+      background-color: #2980b9;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .content-section {
+        margin: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Admin Dashboard</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('settings') }}">Settings</a></li>
+      <li><a href="{{ url_for('timetable') }}">Manage Timetable</a></li>
+      <li><a href="{{ url_for('view_achievements') }}">View Achievements</a></li> <!-- New Link -->
+      <li><a href="{{ url_for('view_project_ideas') }}">View Project Ideas</a></li> <!-- New Link -->
+      <li><a href="{{ url_for('notifications') }}">Notifications</a></li> <!-- New Link -->
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <h1>Welcome to Admin Dashboard</h1>
+      <div class="user-info">
+        <p>Logged in as <strong>Admin</strong></p>
+      </div>
+    </header>
+
+    <!-- View Achievements Section -->
+    <div class="content-section">
+      <h2>View Achievements</h2>
+      <p>Here, you can view the achievements of various students and teachers.</p>
+      <!-- Example of displaying achievements -->
+      <div class="notification">
+        <p><strong>Student 1</strong> won the Best Research Award in AI!</p>
+      </div>
+      <div class="notification">
+        <p><strong>Teacher 1</strong> achieved the highest student satisfaction rating in the department!</p>
+      </div>
+      <!-- Add more achievements as needed -->
+    </div>
+
+    <!-- View Project Ideas Section -->
+    <div class="content-section">
+      <h2>View Project Ideas</h2>
+      <p>Explore potential project ideas for students and teachers to work on.</p>
+      <!-- Example of project ideas -->
+      <div class="notification">
+        <p><strong>Project Idea 1:</strong> AI-powered personalized healthcare system.</p>
+      </div>
+      <div class="notification">
+        <p><strong>Project Idea 2:</strong> Machine learning algorithms for predicting student performance.</p>
+      </div>
+      <!-- Add more project ideas as needed -->
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="content-section">
+      <h2>Notifications</h2>
+      <p>Stay updated with the latest events and announcements.</p>
+      <!-- Example of notification -->
+      <div class="notification">
+        <p><strong>Admin Notice:</strong> New semester timetable is now available. Please review the schedule.</p>
+      </div>
+      <div class="notification">
+        <p><strong>Reminder:</strong> Submit your annual performance report by the end of this month.</p>
+      </div>
+      <!-- Add more notifications as needed -->
+    </div>
+
+  </div>
+
+  <script>
+    // Example for handling dynamic content for notifications or project ideas (optional)
+    // You can integrate this with backend systems to fetch live data.
+  </script>
+</body>
+</html>

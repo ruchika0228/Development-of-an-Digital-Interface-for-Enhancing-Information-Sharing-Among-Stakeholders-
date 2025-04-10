@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('../images/background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .forgot-password-container {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(236, 225, 225, 0.5);
+      width: 100%;
+      max-width: 400px;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #ddd;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #555;
+      border-radius: 5px;
+      font-size: 1rem;
+      background: #333;
+      color: #fff;
+    }
+
+    input::placeholder {
+      color: #bbb;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #5c85d6;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #4a73c4;
+    }
+
+    .login-links {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .login-links a {
+      color: #9bbff0;
+      text-decoration: none;
+    }
+
+    .login-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="forgot-password-container">
+    <h1>Forgot Password</h1>
+    <form id="forgotPasswordForm">
+      <div class="form-group">
+        <label for="emailOrPhone">Email or Phone Number</label>
+        <input type="text" id="emailOrPhone" placeholder="Enter your email or phone number" required />
+      </div>
+      <button type="submit">Reset Password</button>
+    </form>
+    <div class="login-links">
+      <a href="index.html">Back to Login</a>
+      
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('forgotPasswordForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const emailOrPhone = document.getElementById('emailOrPhone').value.trim();
+
+      // Client-side validation
+      if (!emailOrPhone) {
+        alert('Please enter your registered email or phone number.');
+        return;
+      }
+      
+      // Simulated backend forgot password logic
+      console.log('Reset request submitted for:', { emailOrPhone });
+
+      // TODO: Send reset request to the server
+      fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailOrPhone })
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert('Password reset instructions have been sent to your email or phone.');
+          window.location.href = 'login.html'; // Redirect to login page
+        } else {
+          alert('Failed to reset password. Please check your details and try again.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+      });
+    });
+  </script>
+</body>
+</html>
